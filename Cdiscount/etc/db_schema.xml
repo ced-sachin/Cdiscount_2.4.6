@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+  <table name="cdiscount_profile" resource="default" engine="innodb" comment="Profile Table">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="ID"/>
+    <column xsi:type="varchar" name="profile_code" nullable="false" length="50" comment="Profile Code"/>
+    <column xsi:type="int" name="profile_status" padding="10" unsigned="true" nullable="true" identity="false" default="1" comment="Profile Status"/>
+    <column xsi:type="varchar" name="profile_name" nullable="false" length="255" comment="Profile Name"/>
+    <column xsi:type="varchar" name="profile_category" nullable="true" length="255" comment="Profile Category"/>
+    <column xsi:type="varchar" name="model_name" nullable="true" length="255" comment="Model Name"/>
+    <column xsi:type="mediumtext" name="profile_required_attributes" nullable="true" comment="Profile Required Attributes"/>
+    <column xsi:type="mediumtext" name="profile_optional_attributes" nullable="true" comment="Profile Optional Attributes"/>
+    <column xsi:type="varchar" name="magento_category" nullable="true" length="200" comment="Magento Category"/>
+    <column xsi:type="text" name="profile_products_filters" nullable="true" comment="Products Filters"/>
+    <column xsi:type="text" name="product_state" nullable="true" comment="Product Status"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+    <constraint xsi:type="unique" referenceId="CDISCOUNT_PROFILE_PROFILE_CODE">
+      <column name="profile_code"/>
+    </constraint>
+  </table>
+  <table name="cdiscount_profile_products" resource="default" engine="innodb" comment="Profile Products Table">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="ID"/>
+    <column xsi:type="int" name="profile_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Profile Id"/>
+    <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Product ID"/>
+    <column xsi:type="bigint" name="cdiscount_item_id" padding="20" unsigned="true" nullable="false" identity="false" comment="Cdiscount Item ID"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="CDISCOUNT_PROFILE_PRODUCTS_PROFILE_ID_CDISCOUNT_PROFILE_ID" table="cdiscount_profile_products" column="profile_id" referenceTable="cdiscount_profile" referenceColumn="id" onDelete="CASCADE"/>
+    <constraint xsi:type="unique" referenceId="CDISCOUNT_PROFILE_PRODUCTS_PROFILE_ID_PRODUCT_ID">
+      <column name="profile_id"/>
+      <column name="product_id"/>
+    </constraint>
+    <constraint xsi:type="unique" referenceId="CDISCOUNT_PROFILE_PRODUCTS_PRODUCT_ID">
+      <column name="product_id"/>
+    </constraint>
+  </table>
+  <table name="cdiscount_feeds" resource="default" engine="innodb" comment="Cdiscount Feeds">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="ID"/>
+    <column xsi:type="varchar" name="feed_id" nullable="true" length="255" comment="Feed Id"/>
+    <column xsi:type="varchar" name="type" nullable="true" length="255" comment="Type"/>
+    <column xsi:type="mediumtext" name="feed_response" nullable="true" comment="Operation Type"/>
+    <column xsi:type="varchar" name="status" nullable="true" length="20" comment="Status"/>
+    <column xsi:type="text" name="feed_file" nullable="true" comment="Feed File Path"/>
+    <column xsi:type="text" name="response_file" nullable="true" comment="Response File Path"/>
+    <column xsi:type="date" name="feed_created_date" comment="Feed Created Date"/>
+    <column xsi:type="date" name="feed_executed_date" comment="Feed Executed Date"/>
+    <column xsi:type="mediumtext" name="product_ids" nullable="true" comment="Product IDs"/>
+    <column xsi:type="text" name="sync_url" nullable="true" comment="Sync Url"/>
+    <column xsi:type="varchar" name="unique_name" nullable="true" length="255" comment="Unique Name"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+    <index referenceId="unique" indexType="btree">
+      <column name="unique_name"/>
+    </index>
+  </table>
+  <table name="cdiscount_orders" resource="default" engine="innodb" comment="Cdiscount Orders">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="ID"/>
+    <column xsi:type="varchar" name="cdiscount_order_id" nullable="false" length="50" default="" comment="Cdiscount Order Id"/>
+    <column xsi:type="varchar" name="magento_order_id" nullable="false" length="50" default="" comment="Magento Order Id"/>
+    <column xsi:type="varchar" name="increment_id" nullable="false" length="255" default="" comment="Magento Increament Id"/>
+    <column xsi:type="date" name="order_place_date" comment="Order Place Date"/>
+    <column xsi:type="varchar" name="status" nullable="true" length="20" default="" comment="Cdiscount Order Status"/>
+    <column xsi:type="text" name="order_data" nullable="true" comment="Order Data"/>
+    <column xsi:type="text" name="order_items" nullable="true" comment="Order Data"/>
+    <column xsi:type="text" name="shipments" nullable="true" comment="Order Shipment Data"/>
+    <column xsi:type="text" name="cancellations" nullable="true" comment="Order Cancellation Data"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+  </table>
+  <table name="cdiscount_failed_orders" resource="default" engine="innodb" comment="Cdiscount Failed Orders">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="ID"/>
+    <column xsi:type="varchar" name="cdiscount_order_id" nullable="false" length="50" default="" comment="Cdiscount Order Id"/>
+    <column xsi:type="varchar" name="reason" nullable="true" length="100" default="" comment="Failed Reason"/>
+    <column xsi:type="date" name="order_date" comment="Order Place Date"/>
+    <column xsi:type="text" name="order_data" nullable="false" comment="Order Data"/>
+    <column xsi:type="text" name="order_items" nullable="false" comment="Order Items"/>
+    <column xsi:type="text" name="cancellations" nullable="false" comment="Cancellations"/>
+    <column xsi:type="text" name="shipments" nullable="false" comment="Shipments"/>
+    <column xsi:type="varchar" name="status" nullable="true" length="20" default="" comment="Cdiscount Order Status"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+  </table>
+  <table name="cdiscount_categories" resource="default" engine="innodb" comment="Cdiscount Categories">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="ID"/>
+    <column xsi:type="varchar" name="name" nullable="true" length="255" default="" comment="Cdiscount Category Name"/>
+    <column xsi:type="mediumtext" name="path" nullable="true" comment="Cdiscount Category Path"/>
+    <column xsi:type="varchar" name="code" nullable="true" length="255" default="" comment="Cdiscount Category Value"/>
+    <column xsi:type="varchar" name="is_variant_allowed" nullable="true" length="255" default="" comment="Cdiscount Variation Allowed"/>
+    <column xsi:type="varchar" name="is_simple_allowed" nullable="true" length="255" default="" comment="Cdiscount Simple Allowed"/>
+    <column xsi:type="text" name="ean_optional" nullable="true" comment="Ean Allowed"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+  </table>
+  <table name="cdiscount_product_change" resource="default" engine="innodb" comment="Cdiscount Product Change">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="ID"/>
+    <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Product Id"/>
+    <column xsi:type="varchar" name="action" nullable="true" length="50" default="" comment="Action"/>
+    <column xsi:type="varchar" name="type" nullable="true" length="50" default="" comment="Type"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+  </table>
+  <table name="cdiscount_sizes" resource="default" engine="innodb" comment="Cdiscount Size">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="ID"/>
+    <column xsi:type="text" name="size" nullable="true" comment="Size"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+  </table>
+  <table name="cdiscount_attributes" resource="default" engine="innodb" comment="Cdiscount Attributes">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="ID"/>
+    <column xsi:type="varchar" name="attribute_name" nullable="true" length="125" comment="Attribute Name"/>
+    <column xsi:type="text" name="attribute_mappings" nullable="true" comment="Attribute Mappings"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+  </table>
+  <table name="ced_logs" resource="default" engine="innodb" comment="Cedcommerce Logs">
+      <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="ID"/>
+      <column xsi:type="text" name="message" nullable="true" comment="Message"/>
+      <column xsi:type="mediumtext" name="context" nullable="true" comment="Context"/>
+      <column xsi:type="text" name="level" nullable="true" comment="Level"/>
+      <column xsi:type="text" name="level_name" nullable="true" comment="Level Name"/>
+      <column xsi:type="text" name="channel" nullable="true" comment="Channel"/>
+      <column xsi:type="datetime" name="datetime" on_update="false" nullable="true" comment="Date"/>
+      <constraint xsi:type="primary" referenceId="PRIMARY">
+          <column name="id"/>
+      </constraint>
+  </table>
+</schema>

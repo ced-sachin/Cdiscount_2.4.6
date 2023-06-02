@@ -1,0 +1,19 @@
+{
+    "name": "cdiscount/sdkphpapi",
+    "description": "PHP SDK for the Cdiscount Marketplace API",
+    "type": "project",
+    "autoload": {
+        "files": ["sdk/autoload.php"]
+    },
+    "require": {
+        "laminas/laminas-authentication": "*",
+        "laminas/laminas-db": "*",
+        "laminas/laminas-soap": "*",
+        "laminas/laminas-http": "*",
+        "laminas/laminas-log": "*",
+        "laminas/laminas-config": "*"
+    },
+    "license": "GPL-3.0",
+    "minimum-stability": "stable",
+    "version": "2.2.3"
+}
